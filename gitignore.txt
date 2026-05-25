@@ -5,9 +5,10 @@ __pycache__/
 .venv/
 venv/
 env/
-.git/
-.github/
-*.log
-data/
-tests/
+ENV/
 .env
+.vscode/
+.idea/
+*.log
+dist/
+build/

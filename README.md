@@ -1,21 +1,13 @@
-# MVP DataOps Docente
+# MVP Churn
 
 Repositorio piloto para preparar, probar y documentar un entorno técnico reproducible para soluciones de datos e IA.
 
 ## Objetivo
-Contar con una base técnica simple y replicable para que los grupos de estudiantes puedan trabajar con:
-- Python 3
-- FastAPI
-- Docker
-- Git y GitHub
-- GitHub Actions
-- Render
-- Supabase (PostgreSQL)
-- Scikit-learn para un clasificador binario simple
+Generar un pipeline el cual pueda seguir las fases de ingesta, preprocesamiento, validacion y carga de datos, buscando que asi los datos puedan cambiarse a un formato mas facil de estudiar para la IA, los cuales seran guardados en supabase. Con este pipeline se busca entrenar un modelo de inteligencia artificial capaz de predecir si los clientes abandonaran o no abandonaran el servicio, entregando de esta forma una gran ayuda para la empresa
 
 ## Arquitectura del MVP
 La solución implementa una arquitectura IA híbrida simple:
-![Arquitectura del MVP](images/Arquitectura.png)
+
 - Aplicación Python dockerizada
 - API con FastAPI
 - CI/CD con GitHub Actions
@@ -25,26 +17,29 @@ La solución implementa una arquitectura IA híbrida simple:
 
 ## Estructura del proyecto
 ```text
-mvp-dataops-docente/
+Grupo-1-Churn/
 ├─ app/
+│  ├─ __pycache__
 │  ├─ __init__.py
 │  ├─ main.py
 │  ├─ db.py
 │  └─ predict.py
 ├─ scripts/
-│  ├─ load_postulaciones_xlsx.py
-│  └─ train_matriculado_model.py
+│  ├─ carga_churn_csv.py
+│  ├─ load_churn_csv.py
+│  ├─ preprocesar_churn_csv.py
+│  └─ validar_churn_csv.py
 ├─ artifacts/
 │  ├─ matriculado_model.joblib
 │  └─ matriculado_metrics.json
 ├─ examples/
-│  └─ predict_matriculado_payload.json
+│  
 ├─ tests/
 │  └─ test_health.py
 ├─ data/
-│  └─ postulaciones.xlsx
+│  └─ 02_Base_WA_Fn-UseC_-Telco-Customer-Churn.csv
 ├─ sql/
-│  └─ 01_create_postulaciones_demo_table.sql
+│  └─ 01_create_cliente_churn.sql
 ├─ .github/
 │  └─ workflows/
 │     └─ ci.yml
@@ -54,12 +49,13 @@ mvp-dataops-docente/
 ├─ Dockerfile
 ├─ README.md
 ├─ render.yaml
-└─ requirements.txt
+├─ requirements.txt
+└─ pipeline.py
 ```
 
 ## Flujo implementado
-1. Se dispone de un archivo Excel de ejemplo en `data/postulaciones.xlsx`
-2. Se crea una tabla destino en Supabase: `public.postulaciones_demo`
-3. Un script Python carga los datos del Excel a Supabase
+1. Se dispone de un archivo Csv  `data/02_Base_WA_Fn-UseC_-Telco-Customer-Churn.csv`
+2. Se crea una tabla destino en Supabase: `public.churn_clientes`
+3. Un script Python carga los datos del Csv a Supabase
 4. La API consulta esos datos y los expone en JSON
 5. Se generan estadísticas básicas del dataset

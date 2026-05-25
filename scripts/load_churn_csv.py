@@ -46,10 +46,10 @@ def load_churn_to_supabase():
     conn_string = f"postgresql://{os.getenv('SUPABASE_DB_USER')}:{os.getenv('SUPABASE_DB_PASSWORD')}@{os.getenv('SUPABASE_DB_HOST')}:{os.getenv('SUPABASE_DB_PORT')}/{os.getenv('SUPABASE_DB_NAME')}"
     
     with psycopg.connect(conn_string) as conn:
-        # Limpiar tabla existente (opcional)
+        
         conn.execute("TRUNCATE TABLE churn_clientes RESTART IDENTITY")
         
-        # Insertar datos
+        
         for _, row in df.iterrows():
             conn.execute("""
                 INSERT INTO churn_clientes (
@@ -70,7 +70,7 @@ def load_churn_to_supabase():
             ))
         conn.commit()
     
-    print(f"✅ Cargadas {len(df)} filas en churn_clientes")
+    print(f" Cargadas {len(df)} filas en churn_clientes")
 
 if __name__ == "__main__":
     load_churn_to_supabase()

@@ -15,6 +15,7 @@ app = FastAPI(title="API Churn Prediction")
 # ============================================================
 
 class PredictChurnRequest(BaseModel):
+    customerid: int
     gender: str
     senior_citizen: int
     partner: str

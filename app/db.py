@@ -55,7 +55,6 @@ def get_churn_data(limit: int = 20):
 
     query = '''
     SELECT 
-        id,
         customer_id,
         gender,
         senior_citizen,
@@ -79,7 +78,7 @@ def get_churn_data(limit: int = 20):
         churn,
         created_at
     FROM public.churn_clientes
-    ORDER BY id
+    ORDER BY customer_id
     LIMIT %s;
     '''
 

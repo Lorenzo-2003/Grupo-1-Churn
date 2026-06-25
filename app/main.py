@@ -17,24 +17,24 @@ app = FastAPI(title="API Churn Prediction")
 class PredictChurnRequest(BaseModel):
     customerid: int
     gender: str
-    senior_citizen: int
+    seniorcitizen: int
     partner: str
     dependents: str
     tenure: int
-    phone_service: str
-    multiple_lines: str
-    internet_service: str
-    online_security: str
-    online_backup: str
-    device_protection: str
-    tech_support: str
-    streaming_tv: str
-    streaming_movies: str
+    phoneservice: str
+    multiplelines: str
+    internetservice: str
+    onlinesecurity: str
+    onlinebackup: str
+    deviceprotection: str
+    techsupport: str
+    streamingtv: str
+    streamingmovies: str
     contract: str
-    paperless_billing: str
-    payment_method: str
-    monthly_charges: float
-    total_charges: float
+    paperlessbilling: str
+    paymentmethod: str
+    monthlycharges: float
+    totalcharges: float
 
 # ============================================================
 # ENDPOINTS

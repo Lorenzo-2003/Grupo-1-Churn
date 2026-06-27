@@ -1,6 +1,7 @@
 from pathlib import Path
 import joblib
 import pandas as pd
+import numpy as np
 
 MODEL_PATH = Path("artifacts/predictor_matricula_tree.joblib")
 
@@ -27,6 +28,25 @@ def load_model():
         raise FileNotFoundError(f"No existe el modelo en: {MODEL_PATH}")
     return joblib.load(MODEL_PATH)
 
+def impute_missing_values(df):
+    """
+    Rellena valores faltantes (NaN) con valores apropiados
+    """
+    # Copiar para no modificar el original
+    df_imputed = df.copy()
+    
+    # Valores por defecto según tipo de columna
+    for col in df_imputed.columns:
+        if df_imputed[col].dtype in ['float64', 'int64']:
+            # Para columnas numéricas: usar la mediana
+            df_imputed[col] = df_imputed[col].fillna(df_imputed[col].median())
+        else:
+            # Para columnas categóricas: usar el valor más frecuente (moda)
+            if not df_imputed[col].empty:
+                df_imputed[col] = df_imputed[col].fillna(df_imputed[col].mode()[0] if not df_imputed[col].mode().empty else 'Desconocido')
+    
+    return df_imputed
+
 def predict_churn(features: dict):
     """
     Función original de predicción de churn con reglas simples
@@ -37,6 +57,15 @@ def predict_churn(features: dict):
     monthly_charges = features.get('monthly_charges', 0)
     contract = features.get('contract', 'Month-to-month')
     
+    # Manejar valores NaN en los features de churn
+    if pd.isna(tenure):
+        tenure = 0
+    if pd.isna(monthly_charges):
+        monthly_charges = 0
+    if pd.isna(contract):
+        contract = 'Month-to-month'
+    
+    # Lógica simple de predicción
     if contract == 'Month-to-month' and monthly_charges > 70:
         prediction = 1
         risk = "Alto"
@@ -65,9 +94,11 @@ def predict_churn(features: dict):
         # Preparar datos para el modelo
         data = pd.DataFrame([features], columns=FEATURE_COLUMNS)
         
-        # Hacer predicción
-        pred_matricula = model.predict(data)[0]
-        probs = model.predict_proba(data)[0]
+        data_imputed = impute_missing_values(data)
+        
+        # Hacer predicción con datos imputados
+        pred_matricula = model.predict(data_imputed)[0]
+        probs = model.predict_proba(data_imputed)[0]
         
         # Resultados de matrícula
         matricula_pred = int(pred_matricula)
@@ -76,6 +107,7 @@ def predict_churn(features: dict):
         prob_si = float(probs[1])
         
     except Exception as e:
+        # Si hay error al cargar el modelo o predecir
         matricula_pred = None
         matricula_label = "Error"
         prob_no = None
@@ -101,19 +133,3 @@ def predict_churn(features: dict):
         result["error"] = error_modelo
     
     return result
-
-def predict_matriculado(payload: dict):
-    """
-    Función independiente que solo predice matrícula (mantenida por compatibilidad)
-    """
-    model = load_model()
-    data = pd.DataFrame([payload], columns=FEATURE_COLUMNS)
-    pred = model.predict(data)[0]
-    probs = model.predict_proba(data)[0]
-    
-    return {
-        "predicted_class": int(pred),
-        "predicted_label": "SI" if int(pred) == 1 else "NO",
-        "probability_no": float(probs[0]),
-        "probability_si": float(probs[1]),
-    }

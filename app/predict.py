@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 # ========== RUTAS DE MODELOS ==========
-MODEL_CHURN_PATH = Path("artifacts/predictor_churn_tree.joblib")  # Modelo de churn
+MODEL_CHURN_PATH = Path("artifacts/predictor_matricula_tree.joblib")  # Modelo de churn
 
 # ========== COLUMNAS DEL DATASET ==========
 FEATURE_COLUMNS = [

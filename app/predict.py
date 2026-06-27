@@ -1,4 +1,22 @@
 
+from pathlib import Path
+import joblib
+import pandas as pd
+
+def load_model():
+    if not MODEL_PATH.exists():
+        raise FileNotFoundError(f"No existe el modelo en: {MODEL_PATH}")
+    return joblib.load(MODEL_PATH)
+
+def predict_matriculado(payload: dict):
+    model = load_model()
+
+    data = pd.DataFrame([payload], columns=FEATURE_COLUMNS)
+
+    pred = model.predict(data)[0]
+    probs = model.predict_proba(data)[0]
+
+
 
 def predict_churn(features: dict):
     
@@ -29,10 +47,12 @@ def predict_churn(features: dict):
         risk = "Bajo"
         reason = "Cliente estable"
     
+    
     return {
         "prediction": prediction,
         "prediction_label": "Churn" if prediction == 1 else "No Churn",
         "risk_level": risk,
         "reason": reason,
-        "note": "Predicción basada en reglas (modelo no implementado según indicación del profesor)"
+        "probability_no": float(probs[0]),
+        "probability_si": float(probs[1])
     }

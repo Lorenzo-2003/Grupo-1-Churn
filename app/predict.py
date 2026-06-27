@@ -6,20 +6,26 @@ import numpy as np
 MODEL_PATH = Path("artifacts/predictor_matricula_tree.joblib")
 
 FEATURE_COLUMNS = [
-    "periodo",
-    "sexo",
-    "preferencia",
-    "carrera",
-    "facultad",
-    "puntaje",
-    "grupo_depen",
-    "region",
-    "latitud",
-    "longitud",
-    "ptje_nem",
-    "psu_promlm",
-    "pace",
-    "gratuidad",
+    "customerid",
+    "gender",
+    "seniorcitizen",
+    "partner",
+    "dependents",
+    "tenure",
+    "phoneservice",
+    "multiplelines",
+    "internetservice",
+    "onlinesecurity",
+    "onlinebackup",
+    "deviceprotection",
+    "techsupport",
+    "streamingtv",
+    "streamingmovies",
+    "contract",
+    "paperlessbilling",
+    "paymentmethod",
+    "monthlycharges",
+    "totalcharges"
 ]
 
 def load_model():
@@ -32,32 +38,30 @@ def impute_missing_values(df):
     """
     Rellena valores faltantes (NaN) con valores apropiados
     """
-    # Copiar para no modificar el original
     df_imputed = df.copy()
     
-    # Valores por defecto según tipo de columna
     for col in df_imputed.columns:
         if df_imputed[col].dtype in ['float64', 'int64']:
-            # Para columnas numéricas: usar la mediana
             df_imputed[col] = df_imputed[col].fillna(df_imputed[col].median())
         else:
-            # Para columnas categóricas: usar el valor más frecuente (moda)
             if not df_imputed[col].empty:
-                df_imputed[col] = df_imputed[col].fillna(df_imputed[col].mode()[0] if not df_imputed[col].mode().empty else 'Desconocido')
+                df_imputed[col] = df_imputed[col].fillna(
+                    df_imputed[col].mode()[0] if not df_imputed[col].mode().empty else 'Desconocido'
+                )
     
     return df_imputed
 
 def predict_churn(features: dict):
     """
-    Función original de predicción de churn con reglas simples
-    Más la integración del modelo de matrícula
+    Predicción de churn con reglas simples
+    + integración del modelo de matrícula
     """
     
     tenure = features.get('tenure', 0)
-    monthly_charges = features.get('monthly_charges', 0)
+    monthly_charges = features.get('monthlycharges', 0)  # ← OJO: es "monthlycharges" sin guión bajo
     contract = features.get('contract', 'Month-to-month')
     
-    # Manejar valores NaN en los features de churn
+    # Manejar valores NaN
     if pd.isna(tenure):
         tenure = 0
     if pd.isna(monthly_charges):
@@ -88,26 +92,22 @@ def predict_churn(features: dict):
         reason = "Cliente estable"
     
     try:
-        # Cargar modelo
         model = load_model()
         
-        # Preparar datos para el modelo
+        # Preparar datos para el modelo con las columnas correctas
         data = pd.DataFrame([features], columns=FEATURE_COLUMNS)
         
         data_imputed = impute_missing_values(data)
         
-        # Hacer predicción con datos imputados
         pred_matricula = model.predict(data_imputed)[0]
         probs = model.predict_proba(data_imputed)[0]
         
-        # Resultados de matrícula
         matricula_pred = int(pred_matricula)
         matricula_label = "SI" if matricula_pred == 1 else "NO"
         prob_no = float(probs[0])
         prob_si = float(probs[1])
         
     except Exception as e:
-        # Si hay error al cargar el modelo o predecir
         matricula_pred = None
         matricula_label = "Error"
         prob_no = None
@@ -128,7 +128,6 @@ def predict_churn(features: dict):
         "probability_si": prob_si,
     }
     
-    # Agregar error si existe
     if 'error_modelo' in locals():
         result["error"] = error_modelo
     

@@ -179,10 +179,13 @@ POST /predict-churn
 {
   "status": "ok",
   "prediction": {
-    "predicted_class": 0,
-    "predicted_label": "No",
-    "probability_no": 0.82,
-    "probability_yes": 0.18
+    "churn_prediction": 0,
+    "churn_label": "No Churn",
+    "risk_level": "Medio",
+    "churn_reason": "Riesgo moderado de abandono (45.2%)",
+    "probability_no": 54.84,
+    "probability_si": 45.16,
+    "model_used": "ML con Scaler (Probabilidades Reales)"
   }
 }
 ```

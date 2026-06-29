@@ -83,8 +83,11 @@ Se implementó un clasificador binario con **Regresión Logística** (regulariza
 1. Clonar el repositorio
 2. Crear archivo `.env` a partir de `.env.example`
 3. Activar entorno virtual
-4. Instalar dependencias (`pip install -r requirements.txt`)
-5. Ejecutar:
+4. Instalar dependencias (`python -m venv .venv
+.venv\Scripts\activate
+pip install --upgrade pip
+   pip install -r requirements.txt`)
+6. Ejecutar:
 
 ```bash
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000

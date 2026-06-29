@@ -242,8 +242,8 @@ La conexión a PostgreSQL se realiza mediante variables de entorno:
 APP_ENV=development
 PORT=10000
 
-SUPABASE_DB_HOST=
-SUPABASE_DB_PORT=5432
+SUPABASE_DB_HOST= aws-1-us-west-2.pooler.supabase.com
+SUPABASE_DB_PORT=6543
 SUPABASE_DB_NAME=postgres
 SUPABASE_DB_USER=
 SUPABASE_DB_PASSWORD=

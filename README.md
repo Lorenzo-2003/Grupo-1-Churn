@@ -35,7 +35,7 @@ Grupo-1-Churn/
 │  ├─ preprocesar_churn_csv.py
 │  └─ validar_churn_csv.py
 ├─ artifacts/
-│  └─ predictor_churn_log.joblib
+│  └─ predictor_churn_logistic.joblib
 ├─ examples/
 ├─ tests/
 │  └─ test_health.py
@@ -133,7 +133,7 @@ Ese archivo debe ejecutarse en **Supabase > SQL Editor** antes de correr la carg
 
 ### Artefacto generado
 ```text
-artifacts/predictor_churn_log.joblib
+artifacts/predictor_churn_logistic.joblib
 ```
 
 ## Resultado del modelo

@@ -218,15 +218,15 @@ El servicio web se despliega en Render usando Docker y `render.yaml`.
 URL pública actual:
 
 ```text
-[TU_URL_RENDER]
+https://grupo-1-churn-1-5dhj.onrender.com
 ```
 
 Pruebas públicas sugeridas:
 
 ```text
-[TU_URL_RENDER]/health
-[TU_URL_RENDER]/db-health
-[TU_URL_RENDER]/docs
+https://grupo-1-churn-1-5dhj.onrender.com/health
+https://grupo-1-churn-1-5dhj.onrender.com/db-health
+https://grupo-1-churn-1-5dhj.onrender.com/docs
 ```
 
 ## Supabase
